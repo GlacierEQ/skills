@@ -1,0 +1,22 @@
+{
+  "id": "casey.do-it-again",
+  "name": "Do It Again",
+  "version": "1.0.0",
+  "domain": "orchestration",
+  "lifecycle": "experimental",
+  "purpose": "Recursively improve a canonical artifact and advance when the current leg meets its exit criteria.",
+  "inputs": ["canonical artifact", "operator objective", "prior deltas", "new constraints"],
+  "outputs": ["improved canonical artifact", "material delta", "exit status", "next-leg handoff"],
+  "trust": {
+    "minimum": "safe",
+    "writes_allowed": true,
+    "write_scope": ["versioned working artifacts", "review branches"]
+  },
+  "failure_modes": ["cosmetic rewrite", "loss of validated content", "unsupported invention", "endless iteration", "premature advancement"],
+  "exit_criteria": ["material improvement is demonstrated", "validated content is preserved", "critical defects are resolved or explicitly carried forward"],
+  "dependencies": [],
+  "privacy": {
+    "public_safe": true,
+    "prohibited_content": ["private evidence", "credentials", "personal identifiers"]
+  }
+}
