@@ -1,0 +1,22 @@
+{
+  "id": "casey.memory-control-plane",
+  "name": "Memory Control Plane",
+  "version": "1.0.0",
+  "domain": "memory",
+  "lifecycle": "experimental",
+  "purpose": "Normalize durable memories into domain-owned, provenance-linked, versioned records without erasing uncertainty, contradictions, or supersession history.",
+  "inputs": ["source objects", "existing memory records", "domain registry", "source precedence policy"],
+  "outputs": ["normalized memory records", "duplicate clusters", "contradiction records", "verification queue", "migration delta"],
+  "trust": {
+    "minimum": "safe",
+    "writes_allowed": true,
+    "write_scope": ["canonical memory registry", "versioned migration artifacts"]
+  },
+  "failure_modes": ["summary-to-fact promotion", "cross-domain contamination", "silent deletion", "last-write-wins conflict resolution", "loss of provenance"],
+  "exit_criteria": ["every retained memory has a canonical identifier", "every retained memory has a domain owner and provenance", "every conflict and supersession state is explicit"],
+  "dependencies": ["casey.legal-fact-classifier"],
+  "privacy": {
+    "public_safe": true,
+    "prohibited_content": ["private evidence", "credentials", "personal identifiers", "privileged strategy"]
+  }
+}
