@@ -1,0 +1,62 @@
+schema_version: 1
+registry_id: casey-skills
+visibility: public-sanitized
+private_overlay_required_for:
+  - case-specific facts
+  - evidence locations
+  - credentials
+  - personal data
+  - privileged strategy
+
+trust_levels:
+  - safe
+  - external
+  - system
+  - untrusted
+
+lifecycle_states:
+  - experimental
+  - reviewed
+  - stable
+  - deprecated
+
+skills:
+  - id: casey.do-it-again
+    version: 1.0.0
+    path: ../skills/do-it-again
+    domain: orchestration
+    lifecycle: experimental
+    trust_required: safe
+    risk: medium
+
+  - id: casey.memory-control-plane
+    version: 1.0.0
+    path: ../skills/memory-control-plane
+    domain: memory
+    lifecycle: experimental
+    trust_required: safe
+    risk: high
+
+  - id: casey.legal-fact-classifier
+    version: 1.0.0
+    path: ../skills/legal-fact-classifier
+    domain: legal-analysis
+    lifecycle: experimental
+    trust_required: safe
+    risk: high
+
+  - id: casey.evidence-provenance
+    version: 1.0.0
+    path: ../skills/evidence-provenance
+    domain: evidence
+    lifecycle: experimental
+    trust_required: system
+    risk: critical
+
+  - id: casey.connector-registry
+    version: 1.0.0
+    path: ../skills/connector-registry
+    domain: infrastructure
+    lifecycle: experimental
+    trust_required: system
+    risk: high
