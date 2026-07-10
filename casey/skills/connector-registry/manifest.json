@@ -1,0 +1,22 @@
+{
+  "id": "casey.connector-registry",
+  "name": "Connector Registry",
+  "version": "1.0.0",
+  "domain": "infrastructure",
+  "lifecycle": "experimental",
+  "purpose": "Register connectors as domain-owned capabilities with explicit trust, permissions, canonical data boundaries, write policy, health, and failure behavior.",
+  "inputs": ["connector inventory", "provider capabilities", "authentication mode", "permission scopes", "canonical data policy"],
+  "outputs": ["normalized connector records", "scope findings", "security findings", "health status", "risk register", "remediation plan"],
+  "trust": {
+    "minimum": "system",
+    "writes_allowed": true,
+    "write_scope": ["connector registry", "configuration fingerprints", "audit-policy records"]
+  },
+  "failure_modes": ["secret committed to source control", "unknown connector owner", "overbroad scope", "silent fallback", "destructive write without approval", "competing canonical owners"],
+  "exit_criteria": ["every connector has one primary owner", "every capability has explicit read and write scope", "every connector has an audit path and tested failure behavior"],
+  "dependencies": [],
+  "privacy": {
+    "public_safe": true,
+    "prohibited_content": ["credentials", "tokens", "private endpoints", "case-specific paths", "personal data"]
+  }
+}
