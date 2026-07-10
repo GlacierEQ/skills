@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/GlacierEQ/skills/casey/schemas/adversarial-cases.schema.json",
+  "title": "Casey Skill Adversarial Cases",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "cases"],
+  "properties": {
+    "schema_version": {"const": 1},
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "skill_id", "attack", "input", "expected_guardrails", "prohibited_outcomes"],
+        "properties": {
+          "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "skill_id": {"type": "string", "pattern": "^casey\\.[a-z0-9]+(?:-[a-z0-9]+)*$"},
+          "attack": {"type": "string", "minLength": 10},
+          "input": {"type": "object"},
+          "expected_guardrails": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 3},
+            "uniqueItems": true
+          },
+          "prohibited_outcomes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 3},
+            "uniqueItems": true
+          }
+        }
+      }
+    }
+  }
+}
