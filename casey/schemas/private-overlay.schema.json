@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/GlacierEQ/skills/casey/schemas/private-overlay.schema.json",
+  "title": "Casey Private Overlay Package",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema_version", "overlay_id", "visibility", "skill_registry_ref", "case_context_packages", "evidence_references", "connector_capabilities", "authorized_write_policies", "audit"],
+  "properties": {
+    "schema_version": { "const": 1 },
+    "overlay_id": { "type": "string", "pattern": "^OVERLAY-[A-Z0-9-]+$" },
+    "visibility": { "const": "private" },
+    "skill_registry_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["repository", "registry_path", "version_policy"],
+      "properties": {
+        "repository": { "type": "string", "minLength": 3 },
+        "registry_path": { "const": "casey/registry/skills.yaml" },
+        "version_policy": { "enum": ["exact", "compatible_minor"] }
+      }
+    },
+    "case_context_packages": {
+      "type": "array",
+      "minItems": 1,
+      "items": { "$ref": "#/$defs/caseContext" }
+    },
+    "evidence_references": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/evidenceReference" }
+    },
+    "connector_capabilities": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/connectorCapability" }
+    },
+    "authorized_write_policies": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/writePolicy" }
+    },
+    "audit": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["append_only", "destination_ref", "redaction_required_for_export"],
+      "properties": {
+        "append_only": { "const": true },
+        "destination_ref": { "type": "string", "minLength": 3 },
+        "redaction_required_for_export": { "const": true }
+      }
+    }
+  },
+  "$defs": {
+    "caseContext": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["package_id", "case_id", "procedural_track", "domain", "authorized_skills", "source_ids", "classification_policy", "case_isolation"],
+      "properties": {
+        "package_id": { "type": "string", "pattern": "^CTX-[A-Z0-9-]+$" },
+        "case_id": { "type": "string", "minLength": 3 },
+        "procedural_track": { "type": "string", "minLength": 3 },
+        "domain": { "type": "string", "minLength": 2 },
+        "authorized_skills": {
+          "type": "array",
+          "minItems": 1,
+          "uniqueItems": true,
+          "items": { "type": "string", "pattern": "^casey\\.[a-z0-9]+(?:-[a-z0-9]+)*$" }
+        },
+        "source_ids": { "type": "array", "uniqueItems": true, "items": { "type": "string", "minLength": 3 } },
+        "classification_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["fact_classes", "court_facing_requires_provenance"],
+          "properties": {
+            "fact_classes": {
+              "type": "array",
+              "minItems": 1,
+              "uniqueItems": true,
+              "items": { "enum": ["established_record_fact", "authenticated_evidence", "party_allegation", "disputed_fact", "inference", "verification_target", "strategic_recommendation", "generated_summary"] }
+            },
+            "court_facing_requires_provenance": { "const": true }
+          }
+        },
+        "case_isolation": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["cross_case_merge_allowed", "authorized_cross_references", "prohibited_case_ids"],
+          "properties": {
+            "cross_case_merge_allowed": { "const": false },
+            "authorized_cross_references": { "type": "array", "uniqueItems": true, "items": { "type": "string" } },
+            "prohibited_case_ids": { "type": "array", "uniqueItems": true, "items": { "type": "string" } }
+          }
+        }
+      }
+    },
+    "evidenceReference": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["evidence_id", "case_id", "source_type", "source_locator", "integrity", "authentication_status", "anchors"],
+      "properties": {
+        "evidence_id": { "type": "string", "pattern": "^EVID-[A-Z0-9][A-Z0-9-]{2,63}$" },
+        "case_id": { "type": "string", "minLength": 3 },
+        "source_type": { "enum": ["court_record", "original_file", "email", "message", "audio", "video", "photo", "agency_record", "business_record", "other"] },
+        "source_locator": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["system", "opaque_id"],
+          "properties": {
+            "system": { "type": "string", "minLength": 2 },
+            "opaque_id": { "type": "string", "minLength": 3 },
+            "version": { "type": "string" },
+            "retrieved_at": { "type": "string", "format": "date-time" }
+          }
+        },
+        "integrity": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["algorithm", "value", "computed_before_transformation"],
+          "properties": {
+            "algorithm": { "enum": ["sha256", "sha512"] },
+            "value": { "type": "string", "pattern": "^[a-fA-F0-9]{64}(?:[a-fA-F0-9]{64})?$" },
+            "computed_before_transformation": { "const": true }
+          }
+        },
+        "authentication_status": { "enum": ["unknown", "verification_required", "authenticated", "self_authenticating", "disputed"] },
+        "derivative_of": { "type": ["string", "null"] },
+        "anchors": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["anchor_id", "kind"],
+            "properties": {
+              "anchor_id": { "type": "string", "minLength": 3 },
+              "kind": { "enum": ["page", "line", "timecode", "frame", "record", "metadata"] },
+              "page": { "type": "integer", "minimum": 1 },
+              "record_key": { "type": "string" },
+              "content_digest": { "type": "string" }
+            }
+          }
+        },
+        "quality_warnings": { "type": "array", "items": { "type": "string" } },
+        "confidentiality": { "enum": ["public", "confidential", "privileged", "sealed"] }
+      }
+    },
+    "connectorCapability": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["capability_id", "connector_id", "domain_owner", "trust", "allowed_operations", "canonical_data_types", "prohibited_data_types", "approval_required_for", "audit_log", "failure_policy"],
+      "properties": {
+        "capability_id": { "type": "string", "pattern": "^CAP-[A-Z0-9][A-Z0-9-]{2,63}$" },
+        "connector_id": { "type": "string", "minLength": 2 },
+        "domain_owner": { "type": "string", "minLength": 2 },
+        "trust": { "enum": ["safe", "external", "system", "untrusted"] },
+        "allowed_operations": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["read", "create", "update", "delete", "execute", "admin"] } },
+        "read_scope": { "type": "array", "items": { "type": "string" } },
+        "write_scope": { "type": "array", "items": { "type": "string" } },
+        "canonical_data_types": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "prohibited_data_types": { "type": "array", "items": { "type": "string" }, "uniqueItems": true },
+        "approval_required_for": { "type": "array", "uniqueItems": true, "items": { "enum": ["create", "update", "delete", "execute", "admin", "fallback_write"] } },
+        "audit_log": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["destination", "append_only"],
+          "properties": { "destination": { "type": "string", "minLength": 3 }, "append_only": { "const": true } }
+        },
+        "failure_policy": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["on_unavailable", "silent_fallback_allowed"],
+          "properties": {
+            "on_unavailable": { "enum": ["fail_closed", "queue", "read_only", "approved_fallback"] },
+            "silent_fallback_allowed": { "const": false },
+            "approved_fallback_capability_id": { "type": ["string", "null"] }
+          }
+        },
+        "configuration_fingerprint": { "type": "string", "minLength": 8 }
+      }
+    },
+    "writePolicy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["policy_id", "default_deny", "rules", "prohibited_operations", "emergency_disable"],
+      "properties": {
+        "policy_id": { "type": "string", "pattern": "^WRITE-[A-Z0-9][A-Z0-9-]{2,63}$" },
+        "default_deny": { "const": true },
+        "rules": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["rule_id", "capability_id", "target_pattern", "operations", "data_types", "approval", "append_only", "idempotency_required", "destructive_operations_allowed"],
+            "properties": {
+              "rule_id": { "type": "string", "minLength": 3 },
+              "capability_id": { "type": "string", "pattern": "^CAP-[A-Z0-9][A-Z0-9-]{2,63}$" },
+              "target_pattern": { "type": "string", "minLength": 1 },
+              "operations": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "enum": ["create", "update", "delete", "execute", "admin"] } },
+              "data_types": { "type": "array", "minItems": 1, "uniqueItems": true, "items": { "type": "string" } },
+              "approval": { "enum": ["none", "human", "dual_control"] },
+              "append_only": { "type": "boolean" },
+              "idempotency_required": { "type": "boolean" },
+              "destructive_operations_allowed": { "type": "boolean" },
+              "max_batch_size": { "type": "integer", "minimum": 1 }
+            }
+          }
+        },
+        "prohibited_operations": { "type": "array", "uniqueItems": true, "items": { "enum": ["overwrite_original_evidence", "silent_fallback_write", "unlogged_delete", "credential_export", "cross_case_write"] } },
+        "emergency_disable": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["enabled", "mechanism", "fail_mode"],
+          "properties": {
+            "enabled": { "const": true },
+            "mechanism": { "type": "string", "minLength": 3 },
+            "fail_mode": { "const": "fail_closed" }
+          }
+        }
+      }
+    }
+  }
+}
