@@ -1,0 +1,22 @@
+{
+  "id": "casey.mcp-stack-auditor",
+  "name": "MCP Stack Auditor",
+  "version": "1.0.0",
+  "domain": "infrastructure",
+  "lifecycle": "experimental",
+  "purpose": "Audit a multi-connector MCP and agent stack to identify duplication, unsafe permissions, competing sources of truth, and consolidation priorities.",
+  "inputs": ["MCP configuration", "connector registry", "repository inventory", "agent and workflow inventory", "permission scopes", "reliability observations"],
+  "outputs": ["capability matrix", "overlap report", "trust and permission matrix", "source-of-truth map", "failure register", "consolidation plan", "north-star architecture"],
+  "trust": {
+    "minimum": "system",
+    "writes_allowed": true,
+    "write_scope": ["audit reports", "reviewed connector-policy proposals", "retirement plans"]
+  },
+  "failure_modes": ["connector count optimized over governance", "convenience treated as canonical ownership", "hidden write path", "unsafe fan-out", "silent fallback", "credentials exposed"],
+  "exit_criteria": ["every active connector has an owner and trust level", "every capability has a canonical purpose and fallback rule", "every connector has a retention or retirement decision"],
+  "dependencies": ["casey.connector-registry"],
+  "privacy": {
+    "public_safe": true,
+    "prohibited_content": ["credentials", "tokens", "private endpoints", "case-specific paths", "personal data"]
+  }
+}
