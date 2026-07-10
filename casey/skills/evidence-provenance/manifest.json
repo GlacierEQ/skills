@@ -1,0 +1,22 @@
+{
+  "id": "casey.evidence-provenance",
+  "name": "Evidence Provenance",
+  "version": "1.0.0",
+  "domain": "evidence",
+  "lifecycle": "experimental",
+  "purpose": "Preserve an auditable lineage from unchanged original evidence through every derivative, extraction, assertion, and generated artifact.",
+  "inputs": ["original source reference", "acquisition metadata", "authorized operation", "case or domain assignment"],
+  "outputs": ["evidence record", "cryptographic hash", "derivative graph", "custody events", "citation anchors", "quality and authenticity warnings"],
+  "trust": {
+    "minimum": "system",
+    "writes_allowed": true,
+    "write_scope": ["immutable evidence metadata", "append-only custody logs", "separately identified derivatives"]
+  },
+  "failure_modes": ["original overwritten by derivative", "hash computed after transformation", "trusted connector treated as authentication", "lineage gap", "quality warning omitted"],
+  "exit_criteria": ["every derivative resolves to an unchanged original", "every transformation is reproducible or documented", "every relied-upon assertion has a precise source anchor"],
+  "dependencies": [],
+  "privacy": {
+    "public_safe": true,
+    "prohibited_content": ["evidence bytes", "private source locations", "credentials", "personal identifiers"]
+  }
+}
