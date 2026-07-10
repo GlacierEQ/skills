@@ -1,34 +1,46 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://github.com/GlacierEQ/skills/casey/schemas/adversarial-cases.schema.json",
-  "title": "Casey Skill Adversarial Cases",
+  "title": "Casey Adversarial Validation Cases",
   "type": "object",
   "additionalProperties": false,
   "required": ["schema_version", "cases"],
   "properties": {
-    "schema_version": {"const": 1},
+    "schema_version": { "const": 1 },
     "cases": {
       "type": "array",
       "minItems": 1,
       "items": {
         "type": "object",
         "additionalProperties": false,
-        "required": ["id", "skill_id", "attack", "input", "expected_guardrails", "prohibited_outcomes"],
+        "required": ["id", "description", "action", "purpose", "connector_trust", "evidence_status", "expected_outcome", "expected_reason_codes"],
         "properties": {
-          "id": {"type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"},
-          "skill_id": {"type": "string", "pattern": "^casey\\.[a-z0-9]+(?:-[a-z0-9]+)*$"},
-          "attack": {"type": "string", "minLength": 10},
-          "input": {"type": "object"},
-          "expected_guardrails": {
+          "id": { "type": "string", "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$" },
+          "description": { "type": "string", "minLength": 10 },
+          "action": { "enum": ["read", "create", "update", "delete", "execute", "admin"] },
+          "purpose": { "enum": ["analysis", "court_facing", "evidence_processing", "system_administration"] },
+          "connector_trust": { "enum": ["safe", "external", "system", "untrusted"] },
+          "evidence_status": {
             "type": "array",
-            "minItems": 1,
-            "items": {"type": "string", "minLength": 3},
+            "items": { "enum": ["established_record_fact", "authenticated_evidence", "party_allegation", "disputed_fact", "inference", "verification_target", "strategic_recommendation", "generated_summary"] },
             "uniqueItems": true
           },
-          "prohibited_outcomes": {
+          "public_destination": { "type": "boolean", "default": false },
+          "contains_private_data": { "type": "boolean", "default": false },
+          "domain_match": { "type": "boolean", "default": true },
+          "fallback_used": { "type": "boolean", "default": false },
+          "fallback_approved": { "type": "boolean", "default": false },
+          "provenance_required": { "type": "boolean", "default": false },
+          "provenance_complete": { "type": "boolean", "default": false },
+          "destructive": { "type": "boolean", "default": false },
+          "explicit_authorization": { "type": "boolean", "default": false },
+          "write_policy_match": { "type": "boolean", "default": false },
+          "audit_enabled": { "type": "boolean", "default": false },
+          "approval_required": { "type": "boolean", "default": false },
+          "expected_outcome": { "enum": ["allow", "review", "block"] },
+          "expected_reason_codes": {
             "type": "array",
-            "minItems": 1,
-            "items": {"type": "string", "minLength": 3},
+            "items": { "type": "string", "pattern": "^[A-Z0-9_]+$" },
             "uniqueItems": true
           }
         }
