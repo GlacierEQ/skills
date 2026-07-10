@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/GlacierEQ/skills/casey/schemas/skill-manifest.schema.json",
+  "title": "Casey Skill Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "name",
+    "version",
+    "domain",
+    "lifecycle",
+    "purpose",
+    "inputs",
+    "outputs",
+    "trust",
+    "failure_modes",
+    "exit_criteria"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "pattern": "^casey\\.[a-z0-9]+(?:-[a-z0-9]+)*$"
+    },
+    "name": { "type": "string", "minLength": 3 },
+    "version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    },
+    "domain": { "type": "string", "minLength": 2 },
+    "lifecycle": {
+      "enum": ["experimental", "reviewed", "stable", "deprecated"]
+    },
+    "purpose": { "type": "string", "minLength": 10 },
+    "inputs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "outputs": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "trust": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["minimum", "writes_allowed"],
+      "properties": {
+        "minimum": {
+          "enum": ["safe", "external", "system", "untrusted"]
+        },
+        "writes_allowed": { "type": "boolean" },
+        "write_scope": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "failure_modes": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "exit_criteria": {
+      "type": "array",
+      "items": { "type": "string" },
+      "minItems": 1
+    },
+    "dependencies": {
+      "type": "array",
+      "items": { "type": "string" },
+      "default": []
+    },
+    "privacy": {
+      "type": "object",
+      "properties": {
+        "public_safe": { "type": "boolean" },
+        "prohibited_content": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

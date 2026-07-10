@@ -1,0 +1,22 @@
+{
+  "id": "casey.legal-fact-classifier",
+  "name": "Legal Fact Classifier",
+  "version": "1.0.0",
+  "domain": "legal-analysis",
+  "lifecycle": "experimental",
+  "purpose": "Classify every material legal proposition by evidentiary status before analysis or drafting so the record is not overstated.",
+  "inputs": ["atomic propositions", "source references", "contradicting sources", "case and procedural-track identifiers"],
+  "outputs": ["classified propositions", "court-safe wording", "blocked propositions", "contradiction queue", "verification queue"],
+  "trust": {
+    "minimum": "safe",
+    "writes_allowed": true,
+    "write_scope": ["analysis records", "reviewed classification artifacts"]
+  },
+  "failure_modes": ["compound proposition misclassification", "intent attribution without proof", "repetition treated as corroboration", "mixed procedural records", "invented authority"],
+  "exit_criteria": ["every material proposition has exactly one classification", "every court-facing proposition has a proof path", "unsupported propositions are blocked and queued for verification"],
+  "dependencies": [],
+  "privacy": {
+    "public_safe": true,
+    "prohibited_content": ["case-specific facts", "private evidence", "personal identifiers", "privileged strategy"]
+  }
+}

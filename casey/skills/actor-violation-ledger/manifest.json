@@ -1,0 +1,22 @@
+{
+  "id": "casey.actor-violation-ledger",
+  "name": "Actor Violation Ledger",
+  "version": "1.0.0",
+  "domain": "legal-analysis",
+  "lifecycle": "experimental",
+  "purpose": "Build an actor-by-actor accountability ledger while preventing allegations, template theories, or procedural irregularities from being promoted into established misconduct.",
+  "inputs": ["case and procedural-track identifiers", "authenticated filings and orders", "provenance-linked evidence", "classified propositions", "verified legal authorities", "actor and event registries"],
+  "outputs": ["actor ledger", "source-to-claim matrix", "element and authority matrix", "contradiction register", "evidentiary-gap list", "safe findings", "unsupported-claims list"],
+  "trust": {
+    "minimum": "system",
+    "writes_allowed": true,
+    "write_scope": ["private analytical ledgers", "reviewed source-to-claim matrices"]
+  },
+  "failure_modes": ["template theory treated as evidence", "empty field fabricated", "criminal label inferred from irregularity", "contradictory evidence omitted", "immunity or jurisdiction ignored", "case tracks mixed"],
+  "exit_criteria": ["every material accusation has a provenance path", "every proposition has an evidentiary classification and confidence boundary", "every legal predicate is verified", "contradictions and barriers are reviewed"],
+  "dependencies": ["casey.legal-fact-classifier", "casey.evidence-provenance"],
+  "privacy": {
+    "public_safe": true,
+    "prohibited_content": ["case-specific facts", "actor identities from active matters", "private evidence", "personal identifiers", "privileged strategy"]
+  }
+}
