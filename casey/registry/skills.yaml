@@ -60,3 +60,19 @@ skills:
     lifecycle: experimental
     trust_required: system
     risk: high
+
+  - id: casey.mcp-stack-auditor
+    version: 1.0.0
+    path: ../skills/mcp-stack-auditor
+    domain: infrastructure
+    lifecycle: experimental
+    trust_required: system
+    risk: high
+
+  - id: casey.actor-violation-ledger
+    version: 1.0.0
+    path: ../skills/actor-violation-ledger
+    domain: legal-analysis
+    lifecycle: experimental
+    trust_required: safe
+    risk: critical
