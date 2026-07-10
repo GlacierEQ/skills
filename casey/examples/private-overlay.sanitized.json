@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "overlay_id": "OVERLAY-SYNTHETIC-DEMO-001",
+  "visibility": "private",
+  "skill_registry_ref": {
+    "repository": "GlacierEQ/skills",
+    "registry_path": "casey/registry/skills.yaml",
+    "version_policy": "exact"
+  },
+  "case_context_packages": [
+    {
+      "package_id": "CTX-SYNTHETIC-CASE-A",
+      "case_id": "TEST-CASE-A",
+      "procedural_track": "synthetic-validation-track",
+      "domain": "legal-analysis",
+      "authorized_skills": [
+        "casey.legal-fact-classifier",
+        "casey.evidence-provenance",
+        "casey.actor-violation-ledger"
+      ],
+      "source_ids": ["SRC-SYNTHETIC-001"],
+      "classification_policy": {
+        "fact_classes": [
+          "established_record_fact",
+          "authenticated_evidence",
+          "party_allegation",
+          "disputed_fact",
+          "inference",
+          "verification_target",
+          "strategic_recommendation",
+          "generated_summary"
+        ],
+        "court_facing_requires_provenance": true
+      },
+      "case_isolation": {
+        "cross_case_merge_allowed": false,
+        "authorized_cross_references": [],
+        "prohibited_case_ids": ["TEST-CASE-B"]
+      }
+    }
+  ],
+  "evidence_references": [
+    {
+      "evidence_id": "EVID-SYNTHETIC-001",
+      "case_id": "TEST-CASE-A",
+      "source_type": "original_file",
+      "source_locator": {
+        "system": "synthetic-vault",
+        "opaque_id": "object-001",
+        "version": "1"
+      },
+      "integrity": {
+        "algorithm": "sha256",
+        "value": "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+        "computed_before_transformation": true
+      },
+      "authentication_status": "verification_required",
+      "derivative_of": null,
+      "anchors": [
+        {
+          "anchor_id": "ANCHOR-001",
+          "kind": "page",
+          "page": 1,
+          "content_digest": "synthetic-anchor-only"
+        }
+      ],
+      "quality_warnings": ["Synthetic fixture; not evidence."],
+      "confidentiality": "confidential"
+    }
+  ],
+  "connector_capabilities": [
+    {
+      "capability_id": "CAP-SYNTHETIC-VAULT-READ",
+      "connector_id": "synthetic-vault",
+      "domain_owner": "evidence",
+      "trust": "system",
+      "allowed_operations": ["read"],
+      "read_scope": ["TEST-CASE-A"],
+      "write_scope": [],
+      "canonical_data_types": ["original_evidence"],
+      "prohibited_data_types": ["credentials"],
+      "approval_required_for": ["fallback_write"],
+      "audit_log": {
+        "destination": "audit://synthetic/append-only",
+        "append_only": true
+      },
+      "failure_policy": {
+        "on_unavailable": "fail_closed",
+        "silent_fallback_allowed": false,
+        "approved_fallback_capability_id": null
+      },
+      "configuration_fingerprint": "synthetic-fingerprint-v1"
+    }
+  ],
+  "authorized_write_policies": [
+    {
+      "policy_id": "WRITE-SYNTHETIC-DERIVED-ARTIFACTS",
+      "default_deny": true,
+      "rules": [
+        {
+          "rule_id": "derived-artifact-create",
+          "capability_id": "CAP-SYNTHETIC-VAULT-READ",
+          "target_pattern": "derived/TEST-CASE-A/*",
+          "operations": ["create"],
+          "data_types": ["generated_artifact"],
+          "approval": "human",
+          "append_only": false,
+          "idempotency_required": true,
+          "destructive_operations_allowed": false,
+          "max_batch_size": 10
+        }
+      ],
+      "prohibited_operations": [
+        "overwrite_original_evidence",
+        "silent_fallback_write",
+        "unlogged_delete",
+        "credential_export",
+        "cross_case_write"
+      ],
+      "emergency_disable": {
+        "enabled": true,
+        "mechanism": "disable-overlay-capabilities",
+        "fail_mode": "fail_closed"
+      }
+    }
+  ],
+  "audit": {
+    "append_only": true,
+    "destination_ref": "audit://synthetic/control-plane",
+    "redaction_required_for_export": true
+  }
+}
